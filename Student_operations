@@ -1,0 +1,49 @@
+import java.sql.*;
+import java.util.Scanner;
+
+public class Student {
+
+    public static void addStudent() {
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.print("Enter Name: ");
+            String name = sc.nextLine();
+            System.out.print("Enter Roll No: ");
+            String roll = sc.nextLine();
+            System.out.print("Enter Department: ");
+            String dept = sc.nextLine();
+
+            Connection con = DBConnection.getConnection();
+            String query = "INSERT INTO students(name, roll_no, department) VALUES (?,?,?)";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, name);
+            ps.setString(2, roll);
+            ps.setString(3, dept);
+            ps.executeUpdate();
+
+            System.out.println("Student added successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void viewStudents() {
+        try {
+            Connection con = DBConnection.getConnection();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM students");
+
+            System.out.println("\nID  Name   Roll   Dept");
+            while (rs.next()) {
+                System.out.println(
+                        rs.getInt("student_id") + "  " +
+                        rs.getString("name") + "  " +
+                        rs.getString("roll_no") + "  " +
+                        rs.getString("department")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
